@@ -1,0 +1,45 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+ kind: HelmRepository
+ metadata:
+   name: salt-helm-repo
+   namespace: hybrid
+ spec:
+   interval: 1m
+   url:    https://salt-be-prodlab-a.dnssf.com/chart-unstable/
+   secretRef:
+     name: edge-connect-auth
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: salt-hybrid
+  namespace: hybrid
+spec:
+   interval: 5m
+   chart:
+     spec:
+       chart: salt-hybrid-chart-prodlab-flux-test
+       version: '8.0.*'
+       sourceRef:
+         kind: HelmRepository
+         name: salt-helm-repo
+       interval: 1m
+   releaseName: salt-hybrid
+   targetNamespace: hybrid
+   valuesFrom:
+   - kind: Secret
+     name: edge-connect-auth
+     valuesKey: username
+     targetPath: global.hybrid.authId
+   - kind: Secret
+     name: edge-connect-auth
+     valuesKey: password
+     targetPath: global.hybrid.token
+   - kind: ConfigMap
+     name: salt-edge-connect-config 
+   upgrade:
+     remediation:
+      remediateLastFailure: false
+   test:
+    enable: false
+  
