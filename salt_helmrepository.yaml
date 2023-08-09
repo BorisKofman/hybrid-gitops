@@ -5,7 +5,7 @@ metadata:
    namespace: hybrid
 spec:
   interval: 1m
-  url:    https://salt-be-prodlab-a.dnssf.com/chart-unstable/
+  url:    https://salt-be-prodlab-a.dnssf.com/chart/
   secretRef:
     name: edge-connect-auth
 ---
@@ -18,8 +18,8 @@ spec:
    interval: 5m
    chart:
      spec:
-       chart: salt-hybrid-chart-prodlab-flux-test 
-       version: '8.0.205'
+       chart: salt-hybrid-chart
+       version: '8.0.212'
        sourceRef:
          kind: HelmRepository
          name: salt-helm-repo
